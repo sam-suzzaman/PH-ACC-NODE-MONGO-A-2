@@ -1,5 +1,21 @@
 const TourModel = require("./../models/TourModel"); // import module
 
+// Delete Tour Data
+const deleteTour = async (req, res) => {
+    try {
+        //  app.delete('/deleteTour/:tourID', deleteTour)
+        await TourModel.findByIdAndDelete(req.params.ID);
+        res.status(200).json({
+            status: "success",
+            message: "Tour deleted Successfully",
+        });
+    } catch (error) {
+        res.status(404).json({
+            status: "failed",
+            message: error.message,
+        });
+    }
+};
 // Update handler
 const updateTour = async (req, res) => {
     const tourID = req.params.ID;
@@ -34,10 +50,26 @@ const getSingleTour = async (req, res) => {
     try {
         //  tourRouter.get("/getSingleTour/:ID", getSingleTour);
         const singleTour = await TourModel.findById(tourID);
+
+        // adding likes value
+        let likeCount = singleTour.likes;
+        likeCount = likeCount + 1;
+        const tourWithLike = { likes: likeCount };
+
+        // save new data
+        const updatedTour = await TourModel.findByIdAndUpdate(
+            tourID,
+            tourWithLike,
+            {
+                new: true,
+                runValidators: true,
+            }
+        );
+
         res.status(200).json({
             status: "success",
             data: {
-                singleTour,
+                updatedTour,
             },
         });
     } catch (error) {
@@ -66,6 +98,7 @@ const getAllTour = async (req, res) => {
 
 // Post Handlers
 const tourPostHandler = async (req, res) => {
+    console.log(req.body);
     try {
         const newTour = await TourModel.create(req.body);
         res.status(201).json({
@@ -81,4 +114,10 @@ const tourPostHandler = async (req, res) => {
     }
 };
 
-module.exports = { tourPostHandler, getAllTour, getSingleTour, updateTour };
+module.exports = {
+    tourPostHandler,
+    getAllTour,
+    getSingleTour,
+    updateTour,
+    deleteTour,
+};

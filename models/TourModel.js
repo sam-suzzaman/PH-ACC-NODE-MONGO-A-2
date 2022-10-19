@@ -4,7 +4,7 @@ const TourSchema = new mongoose.Schema({
     title: {
         type: String,
         required: [true, "Tour title must be required"],
-        unique: true,
+        unique: [true, "title must be unique"],
     },
     location: {
         type: String,
@@ -21,7 +21,11 @@ const TourSchema = new mongoose.Schema({
     },
     photo: {
         type: String,
-        unique: true,
+        unique: [true, "url need to be unique"],
+    },
+    likes: {
+        type: Number,
+        default: 0,
     },
 });
 
