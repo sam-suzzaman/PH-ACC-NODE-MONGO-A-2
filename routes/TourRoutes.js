@@ -10,19 +10,28 @@ const {
     deleteTour,
     trandingTour,
     getCheapestTour,
-    getQueryBasedTour,
-    queryBasedSort,
 } = require("../controllers/TourControllers");
+// const {
+//     tourPostHandler,
+//     getAllTour,
+//     getSingleTour,
+//     updateTour,
+//     deleteTour,
+//     trandingTour,
+//     getCheapestTour,
+//     getQueryBasedTour,
+//     queryBasedSort,
+// } = require("../controllers/TourControllers");
 
 // Routes
-tourRouter.post("/addTour", tourPostHandler);
+tourRouter.post("/POST/tours", tourPostHandler);
 tourRouter.get("/GET/tours", getAllTour);
-tourRouter.get("/getSingleTour/:ID", getSingleTour);
-tourRouter.get("/getTrendingTour", trandingTour);
-tourRouter.get("/getCheapestTour", getCheapestTour);
-tourRouter.get("/getQueryBasedTour", getQueryBasedTour);
-tourRouter.get("/getQueryBasedSort", queryBasedSort);
-tourRouter.patch("/updateTour/:ID", updateTour);
-tourRouter.delete("/deleteTour/:ID", deleteTour);
+tourRouter.get("/GET/tours/:ID", getSingleTour);
+tourRouter.get("/GET/tour/trending", trandingTour);
+tourRouter.get("/GET/tour/cheapest", getCheapestTour);
+// tourRouter.get("/getQueryBasedTour", getQueryBasedTour); // no
+// tourRouter.get("/getQueryBasedSort", queryBasedSort); // no
+tourRouter.patch("/PATCH/tour/:ID", updateTour);
+tourRouter.delete("/DELETE/tour/:ID", deleteTour);
 
 module.exports = tourRouter; // exporting that router

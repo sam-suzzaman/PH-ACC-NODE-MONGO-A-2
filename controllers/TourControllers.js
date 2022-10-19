@@ -1,4 +1,3 @@
-const { db } = require("./../models/TourModel");
 const TourModel = require("./../models/TourModel"); // import module
 
 // Sorting:
@@ -32,41 +31,41 @@ const getCheapestTour = async (req, res) => {
     }
 };
 
-const queryBasedSort = async (req, res) => {
-    const queryText = Object.values(req.query)[0];
-    const sort = {};
-    sort[queryText] = -1;
+// const queryBasedSort = async (req, res) => {
+//     const queryText = Object.values(req.query)[0];
+//     const sort = {};
+//     sort[queryText] = -1;
 
-    try {
-        const data = await TourModel.aggregate([{ $sort: sort }]);
+//     try {
+//         const data = await TourModel.aggregate([{ $sort: sort }]);
 
-        res.status(201).json({
-            status: "success",
-            data: data,
-        });
-    } catch (error) {
-        res.status(404).json({
-            status: "failed",
-            message: error.message,
-        });
-    }
-};
+//         res.status(201).json({
+//             status: "success",
+//             data: data,
+//         });
+//     } catch (error) {
+//         res.status(404).json({
+//             status: "failed",
+//             message: error.message,
+//         });
+//     }
+// };
 
-const getQueryBasedTour = async (req, res) => {
-    const query = req.query;
-    try {
-        const querySearchTour = await TourModel.find(query);
-        res.status(201).json({
-            status: "success",
-            data: querySearchTour,
-        });
-    } catch (error) {
-        res.status(404).json({
-            status: "failed",
-            message: error.message,
-        });
-    }
-};
+// const getQueryBasedTour = async (req, res) => {
+//     const query = req.query;
+//     try {
+//         const querySearchTour = await TourModel.find(query);
+//         res.status(201).json({
+//             status: "success",
+//             data: querySearchTour,
+//         });
+//     } catch (error) {
+//         res.status(404).json({
+//             status: "failed",
+//             message: error.message,
+//         });
+//     }
+// };
 
 // Delete Tour Data
 const deleteTour = async (req, res) => {
@@ -149,8 +148,8 @@ const getSingleTour = async (req, res) => {
 };
 
 const getAllTour = async (req, res) => {
-    let { page, limit = 3 } = req.query;
-
+    let { page, limit = 3, sort, fields } = req.query;
+    console.log(fields);
     if (page) {
         page = parseInt(page);
         limit = parseInt(limit);
@@ -174,6 +173,45 @@ const getAllTour = async (req, res) => {
                 currentPageTours,
             },
         });
+    } else if (sort) {
+        const queryText = Object.values(req.query)[0];
+        const sort = {};
+        sort[queryText] = -1;
+
+        try {
+            const data = await TourModel.aggregate([{ $sort: sort }]);
+
+            res.status(201).json({
+                status: "success",
+                data: data,
+            });
+        } catch (error) {
+            res.status(404).json({
+                status: "failed",
+                message: error.message,
+            });
+        }
+    } else if (fields) {
+        // const fieldsCollection = fields.split(",").join(" ");
+        // const fieldsQuery = {};
+        // fieldsQuery.fields = fieldsCollection;
+
+        // const filteredTours = await TourModel.find({}).select(fieldsQuery);
+        // console.log(filteredTours);
+
+        const query = req.query;
+        try {
+            const querySearchTour = await TourModel.find(query);
+            res.status(201).json({
+                status: "success",
+                data: querySearchTour,
+            });
+        } catch (error) {
+            res.status(404).json({
+                status: "failed",
+                message: error.message,
+            });
+        }
     } else {
         try {
             const allTours = await TourModel.find({}); // return all tour data
@@ -216,6 +254,15 @@ module.exports = {
     deleteTour,
     trandingTour,
     getCheapestTour,
-    getQueryBasedTour,
-    queryBasedSort,
 };
+// module.exports = {
+//     tourPostHandler,
+//     getAllTour,
+//     getSingleTour,
+//     updateTour,
+//     deleteTour,
+//     trandingTour,
+//     getCheapestTour,
+//     getQueryBasedTour,
+//     queryBasedSort,
+// };
