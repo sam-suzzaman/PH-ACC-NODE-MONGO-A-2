@@ -8,10 +8,22 @@ require("dotenv").config();
 const cors = require("cors");
 app.use(cors());
 
+// Routers
+const tourRouter = require("./routes/TourRoutes");
+
+// Utilites
+const DBConnectionHandler = require("./utilities/DBConnectionHandler");
+
+// Database Connection
+DBConnectionHandler();
+
+// Connecting routes
+app.use("/api/v1/Tour", tourRouter);
+
 app.get("/", (req, res) => {
     res.send("Server is Running");
 });
 
 app.listen(port, () => {
-    console.log(`Listening at port: `, port);
+    console.log(`Listening at port: http://localhost:${port}/`);
 });
