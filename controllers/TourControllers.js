@@ -1,5 +1,32 @@
 const TourModel = require("./../models/TourModel"); // import module
 
+// Update handler
+const updateTour = async (req, res) => {
+    const tourID = req.params.ID;
+    try {
+        //  app.patch('/updateTour/:tourID', updateTour)
+        const updatedTour = await TourModel.findByIdAndUpdate(
+            tourID,
+            req.body,
+            {
+                new: true,
+                runValidators: true,
+            }
+        );
+        res.status(200).json({
+            status: "success",
+            data: {
+                len: updatedTour.length,
+                updatedTour,
+            },
+        });
+    } catch (error) {
+        res.status(404).json({
+            status: "failed",
+            message: error.message,
+        });
+    }
+};
 // GET Handlers
 
 const getSingleTour = async (req, res) => {
@@ -54,4 +81,4 @@ const tourPostHandler = async (req, res) => {
     }
 };
 
-module.exports = { tourPostHandler, getAllTour, getSingleTour };
+module.exports = { tourPostHandler, getAllTour, getSingleTour, updateTour };
