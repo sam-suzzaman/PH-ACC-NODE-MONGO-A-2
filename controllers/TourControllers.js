@@ -149,24 +149,50 @@ const getSingleTour = async (req, res) => {
 };
 
 const getAllTour = async (req, res) => {
-    try {
-        const allTours = await TourModel.find({}); // return all tour data
-        res.status(201).json({
+    let { page, limit = 3 } = req.query;
+
+    if (page) {
+        page = parseInt(page);
+        limit = parseInt(limit);
+
+        const skipValue = (page - 1) * limit;
+
+        // loading the product/tours that contains on current page number
+        const currentPageTours = await TourModel.find({})
+            .skip(skipValue)
+            .limit(limit);
+
+        const totalTours = await TourModel.countDocuments({});
+
+        // calculating page number that used for pagination in frontend
+        const pageCount = Math.ceil(totalTours / limit);
+
+        res.status(200).json({
             status: "success",
-            data: allTours,
+            pageCount,
+            data: {
+                currentPageTours,
+            },
         });
-    } catch (err) {
-        console.log(`all tour getting error is: ${err.message}`);
-        res.status(400).json({
-            status: "failed",
-            message: err.message,
-        });
+    } else {
+        try {
+            const allTours = await TourModel.find({}); // return all tour data
+            res.status(201).json({
+                status: "success",
+                data: allTours,
+            });
+        } catch (err) {
+            console.log(`all tour getting error is: ${err.message}`);
+            res.status(400).json({
+                status: "failed",
+                message: err.message,
+            });
+        }
     }
 };
 
 // Post Handlers
 const tourPostHandler = async (req, res) => {
-    console.log(req.body);
     try {
         const newTour = await TourModel.create(req.body);
         res.status(201).json({
