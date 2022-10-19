@@ -1,5 +1,35 @@
 const TourModel = require("./../models/TourModel"); // import module
 
+// Sorting:
+const trandingTour = async (req, res) => {
+    try {
+        const allTours = await TourModel.find({}).sort({ likes: -1 }).limit(3); // return all tour data
+        res.status(201).json({
+            status: "success",
+            data: allTours,
+        });
+    } catch (error) {
+        res.status(404).json({
+            status: "failed",
+            message: error.message,
+        });
+    }
+};
+
+const getCheapestTour = async (req, res) => {
+    try {
+        const allTours = await TourModel.find({}).sort({ price: 1 }).limit(3); // return all tour data
+        res.status(201).json({
+            status: "success",
+            data: allTours,
+        });
+    } catch (error) {
+        res.status(404).json({
+            status: "failed",
+            message: error.message,
+        });
+    }
+};
 // Delete Tour Data
 const deleteTour = async (req, res) => {
     try {
@@ -120,4 +150,6 @@ module.exports = {
     getSingleTour,
     updateTour,
     deleteTour,
+    trandingTour,
+    getCheapestTour,
 };
