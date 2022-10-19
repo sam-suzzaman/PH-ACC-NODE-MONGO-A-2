@@ -1,3 +1,4 @@
+const { db } = require("./../models/TourModel");
 const TourModel = require("./../models/TourModel"); // import module
 
 // Sorting:
@@ -31,6 +32,26 @@ const getCheapestTour = async (req, res) => {
     }
 };
 
+const queryBasedSort = async (req, res) => {
+    const queryText = Object.values(req.query)[0];
+    const sort = {};
+    sort[queryText] = -1;
+
+    try {
+        const data = await TourModel.aggregate([{ $sort: sort }]);
+
+        res.status(201).json({
+            status: "success",
+            data: data,
+        });
+    } catch (error) {
+        res.status(404).json({
+            status: "failed",
+            message: error.message,
+        });
+    }
+};
+
 const getQueryBasedTour = async (req, res) => {
     const query = req.query;
     try {
@@ -46,6 +67,7 @@ const getQueryBasedTour = async (req, res) => {
         });
     }
 };
+
 // Delete Tour Data
 const deleteTour = async (req, res) => {
     try {
@@ -169,4 +191,5 @@ module.exports = {
     trandingTour,
     getCheapestTour,
     getQueryBasedTour,
+    queryBasedSort,
 };
