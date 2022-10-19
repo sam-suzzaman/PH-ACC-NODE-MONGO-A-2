@@ -30,6 +30,22 @@ const getCheapestTour = async (req, res) => {
         });
     }
 };
+
+const getQueryBasedTour = async (req, res) => {
+    const query = req.query;
+    try {
+        const querySearchTour = await TourModel.find(query);
+        res.status(201).json({
+            status: "success",
+            data: querySearchTour,
+        });
+    } catch (error) {
+        res.status(404).json({
+            status: "failed",
+            message: error.message,
+        });
+    }
+};
 // Delete Tour Data
 const deleteTour = async (req, res) => {
     try {
@@ -152,4 +168,5 @@ module.exports = {
     deleteTour,
     trandingTour,
     getCheapestTour,
+    getQueryBasedTour,
 };

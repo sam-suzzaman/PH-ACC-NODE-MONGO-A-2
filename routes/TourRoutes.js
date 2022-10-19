@@ -10,6 +10,7 @@ const {
     deleteTour,
     trandingTour,
     getCheapestTour,
+    getQueryBasedTour,
 } = require("../controllers/TourControllers");
 
 // Routes
@@ -18,6 +19,7 @@ tourRouter.get("/getAllTour", getAllTour);
 tourRouter.get("/getSingleTour/:ID", getSingleTour);
 tourRouter.get("/getTrendingTour", trandingTour);
 tourRouter.get("/getCheapestTour", getCheapestTour);
+tourRouter.get("/getQueryBasedTour", getQueryBasedTour);
 tourRouter.patch("/updateTour/:ID", updateTour);
 tourRouter.delete("/deleteTour/:ID", deleteTour);
 
