@@ -192,19 +192,14 @@ const getAllTour = async (req, res) => {
             });
         }
     } else if (fields) {
-        // const fieldsCollection = fields.split(",").join(" ");
-        // const fieldsQuery = {};
-        // fieldsQuery.fields = fieldsCollection;
+        let fieldsCollection = fields.split(",").join(" ");
 
-        // const filteredTours = await TourModel.find({}).select(fieldsQuery);
-        // console.log(filteredTours);
+        const filteredTours = await TourModel.find({}).select(fieldsCollection);
 
-        const query = req.query;
         try {
-            const querySearchTour = await TourModel.find(query);
             res.status(201).json({
                 status: "success",
-                data: querySearchTour,
+                data: filteredTours,
             });
         } catch (error) {
             res.status(404).json({
